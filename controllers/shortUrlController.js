@@ -1,11 +1,12 @@
 const ShortUrl = require('../models/shortUrlSchema')
 const shortid = require('shortid'); 
 const Analytics = require('../models/analyticsSchema')
-
 const redis = require('redis');
+require('dotenv').config()
 
+const RedisUrl =  process.env.REDIS_URL || 'redis://redis:6379'  
 const client = redis.createClient({
-  url: 'redis://redis:6379'  
+  url: RedisUrl  
 });
 
 client.on('connect', () => {

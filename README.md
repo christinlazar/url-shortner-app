@@ -1,49 +1,83 @@
-# URL Shortener
 
-## Overview
-URL Shortener is a simple web application that allows users to shorten long URLs and track analytics such as the number of clicks and unique users for each shortened URL. It is built using Node.js, Express, MongoDB, and Redis to enhance performance with caching.
+# URL Shortener Application
+
+This is a URL shortener application built with Node.js, Express, Redis, and Docker. The app allows users to shorten long URLs and provides an easy-to-use API for shortening and retrieving URLs.
 
 ## Features
-- **URL Shortening**: Allows users to shorten long URLs for easy sharing.
-- **Custom Aliases**: Users can provide custom aliases for their shortened URLs.
-- **URL Redirection**: Redirects users to the original long URL when the short URL is accessed.
-- **Analytics Tracking**: Tracks the number of clicks, unique users, and more for each shortened URL.
-- **Caching**: Utilizes Redis for caching URLs and analytics to reduce database load and improve performance.
+- Shorten long URLs.
+- Retrieve original URLs using shortened links.
+- User authentication via Google OAuth.
+- Dockerized application for easy deployment.
 
-## Tech Stack
-- **Frontend**: React.js (Optional, if you want to add a frontend for the URL shortener)
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **Caching**: Redis
-- **URL Analytics**: MongoDB Aggregation for tracking analytics
+## Prerequisites
 
-## Installation
+- Docker installed on your machine.
+  - [Install Docker](https://docs.docker.com/get-docker/)
+- A Google Developer Account for OAuth configuration.
+  - [Google Cloud Console](https://console.cloud.google.com/)
+  
+## Setup Instructions
 
-1. Clone the repository:
+### 1. Clone the Repository
 
-   ```bash
-   git clone https://github.com/yourusername/Url-shortner.git
-   cd Url-shortner
-Install dependencies:
+Clone the repository to your local machine:
 
-bash
-Copy
-Edit
-2. Install Dependencies
 
-npm install
+git clone https://github.com/your-username/url-shortener.git
+cd url-shortener
+2. Set Up Environment Variables
+Create a .env file in the root directory of the project. You can use .env.example as a template and fill in the required values.
 
-3. Set up MongoDB and Redis (Make sure both services are running).
+Example .env file:
 
-4. Configure the .env file with your Redis and MongoDB connection details (if applicable):
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+REDIRECT_URI=https://url-shortner-app-sjpm.onrender.com/auth/google/callback
+PORT=3000
+REDIS_URL=redis://localhost:6379 
 
-bash
-Copy
-Edit
-MONGODB_URI=mongodb://localhost:27017/url-shortener
-REDIS_URL=redis://localhost:6379
+3. Build and Run with Docker
+3.1 Using Docker
+If you're running the app with Docker, build and run the Docker image using the following commands:
 
-5. Start the application:
+Build the Docker image:
 
-npm start
-The app should be running at http://localhost:5000.
+docker build -t url-shortener .
+Run the Docker container:
+
+docker run --env-file .env -p 3000:3000 url-shortener
+
+3.2 Using Docker Compose (Optional)
+If your project uses docker-compose for handling multiple services (e.g., Redis and the app), you can run the following:
+
+Build and start the app with docker-compose:
+
+docker-compose up --build
+This command will automatically set up and link the necessary services (e.g., the Redis service) and run your app.
+
+4. Google OAuth Setup (Important)
+To enable Google OAuth authentication, you must configure your Google Developer OAuth credentials.
+
+Go to Google Cloud Console.
+Create a new project (or select an existing one).
+Navigate to APIs & Services > Credentials.
+Create a new OAuth 2.0 Client ID in the OAuth 2.0 Client IDs section.
+Set the Authorized redirect URI to https://url-shortner-app-sjpm.onrender.com/auth/google/callback (for production).
+For local development, use http://localhost:3000/auth/google/callback.
+Add the following keys to your .env file:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+
+5. Accessing the Application
+Once the container is running, open your browser and navigate to:
+
+Local development: http://localhost:3000
+Production (Render): https://url-shortner-app-sjpm.onrender.com
+6. Stopping the Application
+To stop the Docker container, press CTRL+C in the terminal where the container is running. If you're using Docker Compose, run:
+
+docker-compose down
+
+7. Common Issues and Solutions
+Redis Client Error: getaddrinfo ENOTFOUND redis
+If you get a Redis error like getaddrinfo ENOTFOUND redis, it means that Redis is not found. If you're using Docker Compose, ensure the Redis service is correctly defined. If using Docker, ensure the correct Redis URL is set in the .env file.

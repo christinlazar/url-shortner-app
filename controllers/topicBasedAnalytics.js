@@ -3,10 +3,8 @@ const Analytics = require('../models/analyticsSchema');
 
 const topicBasedAnalytics = async (req,res)=>{
     try {
-        console.log("in topic based analytics",req.params)
                 const { topic } = req.params;
                 const shortUrls = await ShortUrl.find({ topic:topic })
-                console.log(shortUrls)
                 if (shortUrls.length === 0) {
                     return res.status(404).json({ message: 'No URLs found for the specified topic' });
                 }
@@ -84,7 +82,6 @@ const topicBasedAnalytics = async (req,res)=>{
                 res.json(response);
         
     } catch (error) {
-        console.error(error)
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }

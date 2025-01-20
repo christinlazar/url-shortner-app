@@ -36,7 +36,6 @@ const createShortUrl = async (req, res) => {
     if (existingAlias) {
       return res.status(400).json({ message: 'Custom alias already exists' });
     }
-    console.log("Alias",alias)
     const newShortUrl = new ShortUrl({
       longUrl,
       shortUrl: alias,
@@ -50,7 +49,6 @@ const createShortUrl = async (req, res) => {
       createdAt: newShortUrl.createdAt
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -59,10 +57,7 @@ const shortUrlRedirecter = async (req, res) => {
   try {
       const { alias } = req.params;
       const cachedUrl = await client.get(alias);
-      console.log("cached URL",cachedUrl)
-
       if (cachedUrl) {
-          console.log('Cache hit');
           const shortUrl = JSON.parse(cachedUrl);
 
           const analyticsData = new Analytics({
@@ -78,8 +73,6 @@ const shortUrlRedirecter = async (req, res) => {
           res.redirect(shortUrl.longUrl);
           return;
       }
-
-      console.log('Cache miss');
       const shortUrl = await ShortUrl.findOne({ customAlias: alias });
 
       if (!shortUrl) {
@@ -109,7 +102,6 @@ const shortUrlRedirecter = async (req, res) => {
 
       res.redirect(shortUrl.longUrl);
   } catch (error) {
-      console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
   }
 };

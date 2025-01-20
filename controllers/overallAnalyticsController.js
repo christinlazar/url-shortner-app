@@ -19,15 +19,10 @@ const formatOsAndDeviceData = (data, field) => {
 const getOverallAnalytics = async (req, res) => {
     try {
         const userId = req.user.id; 
-
-        console.log(req.user.id);
         const userShortUrls = await ShortUrl.find({ user: userId });
-        console.log("User's short URLs:", userShortUrls);
-
         if (!userShortUrls || userShortUrls.length === 0) {
             return res.status(404).json({ message: 'No short URLs found for this user.' });
         }
-
         const analyticsData = await Analytics.aggregate([
             {
                 $match: {
@@ -64,8 +59,6 @@ const getOverallAnalytics = async (req, res) => {
                 },
             },
         ]);
-
-        console.log("analytics data",analyticsData)
         const response = {
             totalUrls: userShortUrls.length,
             totalClicks: analyticsData.reduce((sum, data) => sum + data.totalClicks, 0),
@@ -87,7 +80,6 @@ const getOverallAnalytics = async (req, res) => {
 
         res.json(response);
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: 'Error retrieving overall analytics.' });
     }
 };

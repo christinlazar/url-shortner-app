@@ -1,12 +1,15 @@
-# version: '3'
+
 # services:
 #   node-app:
 #     image: url-shortner-node-app
 #     build: .
 #     ports:
-#       - "5001:5000"
+#       - "5001:5001"
 #     depends_on:
 #       - redis
+#       - mongodb
+#     environment:
+#       - MONGO_URI=mongodb://mongodb:27017/url-shortner
 #     networks:
 #       - mynetwork
 
@@ -17,20 +20,30 @@
 #     ports:
 #       - "6379:6379"
 
+#   mongodb:
+#     image: mongo:latest
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongodb_data:/data/db
+#     networks:
+#       - mynetwork
+
 # networks:
 #   mynetwork:
 #     driver: bridge
+
+# volumes:
+#   mongodb_data:
+
 services:
   node-app:
     image: url-shortner-node-app
     build: .
     ports:
-      - "5001:5000"
+      - "5001:5001"
     depends_on:
       - redis
-      - mongodb
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/url-shortner
     networks:
       - mynetwork
 
@@ -41,18 +54,9 @@ services:
     ports:
       - "6379:6379"
 
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - mynetwork
-
 networks:
   mynetwork:
     driver: bridge
 
-volumes:
-  mongodb_data:
+
+

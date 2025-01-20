@@ -38,22 +38,9 @@ const getUrlAnalytics = async (req,res)=>{
         }
 
         const data = analyticsData[0];
-
         const clicksByDate = formatClicksByDate(data.clicksByDate);
-
         const osType = formatOsAndDeviceData(data.osType, 'osName');
         const deviceType = formatOsAndDeviceData(data.deviceType, 'deviceName');
-
-        console.log(
-            {
-            "totalClicks": data.totalClicks,
-            "uniqueUsers": data.uniqueUsers,
-            'clicksByDate': clicksByDate,
-            "osType": osType,
-            "deviceType": deviceType,
-            }
-        )
-
         res.status(200).json({
             totalClicks: data.totalClicks,
             uniqueUsers: data.uniqueUsers,
@@ -63,7 +50,6 @@ const getUrlAnalytics = async (req,res)=>{
         });
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
